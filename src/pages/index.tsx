@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 
 import { SubscribeButton } from "../components/SubscribeButton";
 
@@ -47,7 +47,7 @@ export default function Home({ product }: HomeProps) {
 // Nós criamos essa função com o nome getServerSideProps para poder trazer a tipagem dessa chamada dentro do Next.
 // getServerSideProps é renderizado na camada do servidor node que o Next executa junto com a nossa aplicação React.
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   // Fazendo chamada a API do stripe
   // * LER A DOCUMENTAÇÃO *
 
@@ -64,6 +64,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       product
-    }
+    },
+
+    // Um minuto * Uma hora * 24h
+    // Revalidate é uma propriedade que diz de quanto em quanto tempo que o conteúdo da página precisa ser "Revalidado".
+    revalidate: 60 * 60 * 24 
   };
 };
