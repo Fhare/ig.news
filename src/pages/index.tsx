@@ -3,7 +3,7 @@ import { GetStaticProps } from "next";
 
 import { SubscribeButton } from "../components/SubscribeButton";
 
-import { stripe } from "../services/stipe";
+import { stripe } from "../services/stripe";
 
 import Head from "next/head";
 
