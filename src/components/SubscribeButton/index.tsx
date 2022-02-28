@@ -1,5 +1,8 @@
 import { useSession, signIn } from "next-auth/client";
 
+import { api } from "../../services/api";
+import { getStripeJs } from "../../services/stripe-js";
+
 import styles from "./styles.module.scss";
 
 interface SubscribePriceProps {
@@ -11,15 +14,23 @@ export function SubscribeButton({ priceId }: SubscribePriceProps) {
   // Primeira coisa a se fazer é checar se o usuário está logado na aplicação.
   const [ session ] = useSession();
 
-  function handleSubscribe() {
+  async function handleSubscribe() {
     // Se o usuário não estiver logado, mande ele para o login.
     if(!session) {
       signIn("github");
       return;
     }
 
-    // Criação da checkout session
-    
+    try {
+      const response = await api.post("/subscribe");
+      const { sessionId } = response.data;
+
+      const stripe = await getStripeJs();
+
+      await stripe.redirectToCheckout({ sessionId });
+    } catch(err) {
+      alert(err.message);
+    }
   }
 
   return (
