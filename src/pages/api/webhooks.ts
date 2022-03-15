@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 
 import { stripe } from "../../services/stripe";
+import { saveSubscription } from "./_lib/manageSubscription";
 
 import Stripe from "stripe";
 
@@ -38,21 +39,39 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Campo de webhook que o stripe nos envia
     const secret = req.headers["stripe-signature"]
-    
+
     // Verifica se o que vem do cabeçalho do stripe bate com a secret key que nós temos ao iniciar a comunicação com o stripe
     let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(buf, secret, process.env.STRIPE_WEBHOOK_SECRET);
 
-    } catch(err) {
+    } catch (err) {
       return res.status(400).send(`Webhook error: ${err.message}`);
     }
 
     const { type } = event;
 
-    if(relevantEvents.has(type)) {
-      console.log(`Evento recebido ${event}`);
+    if (relevantEvents.has(type)) {
+      try {
+        switch (type) {
+          case "checkout.session.completed":
+
+            // Tipando essa constando para que o typescript entenda o que vem de dado caso seja checkout.session.completed for true
+            const checkoutSession = event.data.object as Stripe.Checkout.Session
+
+            await saveSubscription(
+              checkoutSession.subscription.toString(),
+              checkoutSession.customer.toString()
+            );
+
+            break;
+          default:
+            throw new Error("Unhandled event.");
+        }
+      } catch (err) {
+        return res.json({ error: "Webhook handler filed." })
+      }
     }
 
     res.json({ received: true });
