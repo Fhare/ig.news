@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Readable } from "stream";
 
 import { stripe } from "../../services/stripe";
+
 import { saveSubscription } from "./_lib/manageSubscription";
 
 import Stripe from "stripe";
@@ -30,7 +31,7 @@ export const config = {
 // Criamos esse array para armazenar apenas os tipos de respostas relevantes dos eventos do Stripe
 
 const relevantEvents = new Set([
-  "checkout.sessions.completed"
+  "checkout.session.completed"
 ]);
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -70,7 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             throw new Error("Unhandled event.");
         }
       } catch (err) {
-        return res.status(400).json({ error: "Webhook handler filed." })
+        return res.json({ error: "Webhook handler filed." });
       }
     }
 
