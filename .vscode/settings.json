@@ -2,5 +2,8 @@
   "cSpell.words": [
     "casefold",
     "fabi"
+  ],
+  "cSpell.ignoreWords": [
+    "prismic"
   ]
 }
