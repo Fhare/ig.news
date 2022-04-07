@@ -1,16 +1,21 @@
 import { Header } from "../components/Header";
 import { Provider as NextAuthProvider } from "next-auth/client";
 
+import { PrismicProvider } from '@prismicio/react'
+import { client } from "../services/prismic";
+
 import { AppProps } from "next/app";
 
 import "../styles/global.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NextAuthProvider session={pageProps.session}>
-      <Header />
-      <Component {...pageProps} />
-    </NextAuthProvider>
+    <PrismicProvider client={client}>
+      <NextAuthProvider session={pageProps.session}>
+        <Header />
+        <Component {...pageProps} />
+      </NextAuthProvider>
+    </PrismicProvider>
   )
 };
 

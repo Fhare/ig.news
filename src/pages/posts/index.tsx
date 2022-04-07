@@ -1,4 +1,7 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
+
+import { useAllPrismicDocumentsByType } from '@prismicio/react'
 
 import styles from "./styles.module.scss";
 
@@ -33,3 +36,14 @@ export default function Posts() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+
+  const [ documents ] = useAllPrismicDocumentsByType("Publication");
+
+  console.log(documents);
+
+  return {
+    props: {}
+  }
+};
