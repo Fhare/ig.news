@@ -1,11 +1,22 @@
 import { GetStaticProps } from "next";
+
 import Head from "next/head";
 
-import { useAllPrismicDocumentsByType } from '@prismicio/react'
+import { createClient } from '../../services/prismic';
 
 import styles from "./styles.module.scss";
 
 export default function Posts() {
+
+  async function getPosts() {
+    const client = createClient();
+    const posts = await client.getAllByType('Publication');
+
+    console.log(posts);
+  }
+
+  getPosts();
+
   return (
     <>
       <Head>
@@ -37,13 +48,13 @@ export default function Posts() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+// export const getStaticProps: GetStaticProps = async ({ previewData }) => {
 
-  const [ documents ] = useAllPrismicDocumentsByType("Publication");
 
-  console.log(documents);
 
-  return {
-    props: {}
-  }
-};
+//   return {
+//     props: {
+
+//     }
+//   }
+// }
