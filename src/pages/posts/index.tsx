@@ -1,26 +1,16 @@
 import { GetStaticProps } from "next";
-
 import Head from "next/head";
 
-import { createClient } from '../../services/prismic';
+import * as prismic from "@prismicio/client";
+import { getPrismicClient } from "../../services/prismic";
 
 import styles from "./styles.module.scss";
 
 export default function Posts() {
-
-  async function getPosts() {
-    const client = createClient();
-    const posts = await client.getAllByType('Publication');
-
-    console.log(posts);
-  }
-
-  getPosts();
-
   return (
     <>
       <Head>
-        <title>Posts | Ignews</title>
+        <title>Posts | Ignews</title> 
       </Head>
 
       <main className={styles.container}>
@@ -48,13 +38,20 @@ export default function Posts() {
   );
 }
 
-// export const getStaticProps: GetStaticProps = async ({ previewData }) => {
+export const getStaticProps: GetStaticProps = async () => {
+  const client = getPrismicClient();
 
+  const response = await client.query([
+    prismic.predicates.at("document.type", "publication")
+  ], {
+    fetch: ["publication.title", "publication.content"]
+  })
 
+  console.log(response);
 
-//   return {
-//     props: {
+  return {
+    props: {
 
-//     }
-//   }
-// }
+    }
+  }
+}

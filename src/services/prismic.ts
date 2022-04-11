@@ -1,27 +1,13 @@
-import * as prismic from '@prismicio/client'
-import { enableAutoPreviews } from '@prismicio/next'
-import sm from '../../sm.json'
+import * as prismic from "@prismicio/client";
 
-export const endpoint = sm.apiEndpoint
-export const repositoryName = prismic.getRepositoryName(endpoint)
+export function getPrismicClient() {
+  const client = prismic.createClient("yagoignews" ,{
+    accessToken: process.env.PRISMIC_ACCESS_TOKEN,
 
-export function linkResolver(doc) {
-  switch (doc.type) {
-    case 'homepage':
-      return '/'
-  }
-}
-
-export function createClient(config = {} as any) {
-  const client = prismic.createClient(endpoint, {
-    ...config,
-  })
-
-  enableAutoPreviews({
-    client,
-    previewData: config.previewData,
-    req: config.req,
-  })
+    routes: [
+      { type: "Publication", path: "/posts" }
+    ]
+  });
 
   return client;
 }
