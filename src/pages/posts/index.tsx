@@ -40,7 +40,7 @@ export default function Posts() {
 export const getStaticProps: GetStaticProps = async ({ previewData }) => {
   const client = getPrismicClient({ previewData });
 
-  const posts = await client.getAllByType("publication");
+  const posts = await client.getAllByType("publication-id");
   console.log(posts);
 
   return {
