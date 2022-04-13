@@ -1,5 +1,4 @@
 import * as prismic from "@prismicio/client";
-import { enableAutoPreviews } from '@prismicio/next'
 import sm from "../../sm.json";
 
 export const endpoint = sm.apiEndpoint;
@@ -15,17 +14,11 @@ export function linkResolver(doc) {
   return type;
 }
 
-export function getPrismicClient(config = {} as any) {
+export function getPrismicClient(config = {}) {
   const client = prismic.createClient(endpoint, {
     accessToken: process.env.PRISMIC_ACCESS_TOKEN,
     ...config
   });
-
-  enableAutoPreviews({
-    client,
-    previewData: config.previewData,
-    req: config.req,
-  })
-
+  
   return client;
 }
