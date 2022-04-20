@@ -1,5 +1,16 @@
 {
   "_cts": {
-    "publication-id": {}
+    "publication-id": {
+      "content": {
+        "config": {
+          "patternType": "STORY",
+          "blocks": 1
+        }
+      }
+    },
+    "post": {}
+  },
+  "slices": {
+    "Post": {}
   }
 }

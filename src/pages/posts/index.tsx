@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { getPrismicClient } from "../../services/prismic";
 
+import { RichText } from "prismic-dom";
+
 import styles from "./styles.module.scss";
 
 type Post = {

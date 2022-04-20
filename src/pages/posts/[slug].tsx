@@ -40,11 +40,20 @@ export default function Post({ post }: PostProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
 
-  const session = getSession({ req }); // Nos da informação da pessoa logada na aplicação.
+  const session = await getSession({ req }); // Nos da informação da pessoa logada na aplicação.
   const { slug } = params; // Recupera o valor passado na URL da aplicação.
 
   const prismic = getPrismicClient(req);
   const response = await prismic.getByUID<any>("publication-id", String(slug), {});
+
+  if(!session?.activeSubscription) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false // Caso o cliente se cadastre essa redirect não é permanente.
+      }
+    }
+  }
 
   const post = {
     slug,

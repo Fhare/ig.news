@@ -1,4 +1,5 @@
 import { useSession, signIn } from "next-auth/client";
+import { useRouter } from "next/router";
 
 import { api } from "../../services/api";
 import { getStripeJs } from "../../services/stripe-js";
@@ -13,6 +14,7 @@ export function SubscribeButton({ priceId }: SubscribePriceProps) {
 
   // Primeira coisa a se fazer é checar se o usuário está logado na aplicação.
   const [ session ] = useSession();
+  const router = useRouter();
 
   async function handleSubscribe() {
     // Se o usuário não estiver logado, mande ele para o login.
@@ -20,6 +22,12 @@ export function SubscribeButton({ priceId }: SubscribePriceProps) {
       signIn("github");
       return;
     }
+
+    if(session.activeSubscription) {
+      router.push("/posts");
+
+      return;
+    };
 
     try {
       const response = await api.post("/subscribe");
